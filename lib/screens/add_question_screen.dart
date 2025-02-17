@@ -1,5 +1,6 @@
+// screens/add_question_screen.dart
 import 'package:flutter/material.dart';
-import '../services/api_service.dart';
+import '../services/socket_service.dart';
 
 class AddQuestionScreen extends StatefulWidget {
   const AddQuestionScreen({super.key});
@@ -13,10 +14,11 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   Future<void> submitQuestion() async {
-    await ApiService.submitQuestion(
-      _titleController.text,
-      _descriptionController.text,
-    );
+    final questionData = {
+      'title': _titleController.text,
+      'description': _descriptionController.text,
+    };
+    SocketService.socket.emit('add_question', questionData);
     if (context.mounted) {
       Navigator.pop(context);
     }
